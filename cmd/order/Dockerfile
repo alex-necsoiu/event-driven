@@ -16,3 +16,5 @@ COPY --from=builder /order .
 COPY --from=builder /app/configs/order.env.example .env
 EXPOSE 50052
 CMD ["./order"] 
+
+RUN go install github.com/alex-necsoiu/event-driven/cmd/order@v1.0.0    

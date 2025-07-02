@@ -10,6 +10,7 @@ require (
 	github.com/nats-io/nats.go v1.43.0
 	google.golang.org/grpc v1.73.0
 	google.golang.org/protobuf v1.36.6
+	github.com/alex-necsoiu/event-driven v0.0.0
 )
 
 require (
@@ -22,6 +23,3 @@ require (
 	golang.org/x/text v0.24.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250324211829-b45e905df463 // indirect
 )
-
-require github.com/alex-necsoiu/event-driven v0.0.0-20240101000000-000000000000
-replace github.com/alex-necsoiu/event-driven => .

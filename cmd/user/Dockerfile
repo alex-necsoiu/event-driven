@@ -17,4 +17,6 @@ WORKDIR /root/
 COPY --from=builder /user .
 COPY --from=builder /app/configs/user.env.example .env
 EXPOSE 50051
-CMD ["./user"] 
+CMD ["./user"]
+
+RUN go install github.com/alex-necsoiu/event-driven/cmd/order@v1.0.0 

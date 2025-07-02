@@ -13,4 +13,5 @@ FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder /notification .
 COPY --from=builder /app/configs/notification.env.example .env
-CMD ["./notification"] 
+CMD ["./notification"]
+RUN go install github.com/alex-necsoiu/event-driven/cmd/order@v1.0.0 

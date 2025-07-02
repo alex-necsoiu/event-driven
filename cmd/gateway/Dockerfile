@@ -18,3 +18,5 @@ COPY --from=builder /gateway .
 COPY --from=builder /app/configs/gateway.env.example .env
 EXPOSE 8080
 CMD ["./gateway"] 
+
+RUN go install github.com/alex-necsoiu/event-driven/cmd/order@v1.0.0 
