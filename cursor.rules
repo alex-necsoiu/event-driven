@@ -1,0 +1,78 @@
+---
+description: |
+  🧩 GoPulse – event-driven microservices system in Go.
+  Applies Clean Architecture, gRPC + REST API, event-driven messaging, CI/CD, Docker.
+alwaysApply: true
+---
+
+# 🏗️ Project-wide Practices
+
+- Use Go 1.22+ and follow Go idioms (e.g., short functions, dependency injection)
+- Enforce Clean Architecture layers: cmd/, internal/, pkg/, api/, configs/, test/
+- Ensure event flow decoupling: publish/subscribe via messaging queue (NATS/Kafka/RabbitMQ)
+
+# 📦 Service template
+
+Enforce this folder layout for each service:
+
+```plaintext
+/cmd/<service>/main.go             # Entry point for each service
+/internal/<service>/               # Business logic
+  service.go                       # Core service logic
+  handler.go                       # gRPC/HTTP handlers
+  repository.go                    # DB interface and logic
+/api/proto/                        # gRPC proto definitions
+/pkg/messaging/                   # Messaging interfaces and utilities
+/configs/                         # Configuration files (.env, YAML)
+/test/                            # Integration and mocking tests
+/docker/                          # Dockerfiles and Compose files
+/.github/workflows/ci.yml         # CI pipeline config
+
+# Communication Protocols
+- Use gRPC for internal service-to-service communication:
+- Define .proto files in /api/proto/
+- Compile with protoc and share generated interfaces via Go modules
+- Use REST API (via HTTP) for public-facing gateway services
+
+# Event-Driven Architecture
+
+All services publish/subscribe to events over a message queue (e.g. NATS, Kafka, or RabbitMQ)
+Standard event structure:
+
+````
+{
+  "event_type": "UserCreated",
+  "payload": {
+    // event-specific payload
+  }
+}
+````
+- Publisher and subscriber code lives in /pkg/messaging/
+- Services should react to events instead of calling each other synchronously (when possible)
+
+# Testing
+- Use table-driven unit tests (*_test.go) under each internal/<svc>/
+- Place mocks and fakes under /test/mocks/
+- Coverage >80% encouraged
+
+# Docker & CI/CD
+
+- Each service must have its own Dockerfile
+- Root-level docker-compose.yml to spin up full system:
+- All services
+- Message broker
+- DB (PostgreSQL)
+- GitHub Actions CI should:
+- Run go fmt, go vet, and tests
+- Build and optionally push Docker images
+
+
+# Dependency Management:
+- Use Go Modules (go.mod) per service or at root
+- Prefer minimal external packages; use standard lib where possible
+
+# Developer UX
+
+- Config should load from .env or configs/
+- Use log or zap for structured logging
+- Add Makefile or run.sh for consistent dev setup
