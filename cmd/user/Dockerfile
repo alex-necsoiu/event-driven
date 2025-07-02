@@ -3,10 +3,11 @@ FROM golang:1.23.3-alpine as builder
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
-COPY api/proto/gen api/proto/gen
-COPY cmd/user cmd/user
-COPY internal/user internal/user
-COPY configs/user.env.example configs/user.env.example
+
+# Copy the entire module (from module root)
+COPY . .
+
+# Build the specific service
 # Debug: list generated files
 RUN ls -lR api/proto/gen
 RUN go build -o /user ./cmd/user

@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"event-driven/api/proto/gen"
+	"github.com/alex-necsoiu/event-driven/api/proto/gen"
 )
 
 // UserHandler implements the gRPC UserServiceServer

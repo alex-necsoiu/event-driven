@@ -1,12 +1,15 @@
 # Start from the official Golang image
 FROM golang:1.23.3-alpine as builder
 WORKDIR /app
+
+# Copy go.mod and go.sum first (for caching)
 COPY go.mod go.sum ./
 RUN go mod download
-COPY api/proto/gen api/proto/gen
-COPY cmd/gateway cmd/gateway
-COPY internal/gateway internal/gateway
-COPY configs/gateway.env.example configs/gateway.env.example
+
+# Copy the entire module (from module root)
+COPY . .
+
+# Build the specific service
 RUN go build -o /gateway ./cmd/gateway
 
 FROM alpine:latest
