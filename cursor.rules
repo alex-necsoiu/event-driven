@@ -28,11 +28,22 @@ Enforce this folder layout for each service:
 /docker/                          # Dockerfiles and Compose files
 /.github/workflows/ci.yml         # CI pipeline config
 
+ Enforces:
+  - Clean Architecture (cmd/, internal/, pkg/, api/)
+  - gRPC + REST communication
+  - Event-driven design (NATS/Kafka/RabbitMQ)
+  - Microservice modularity
+  - CI/CD structure
+  - Docker-based dev & deployment
+  - Brief, clear, and useful code comments as a senior architect would write
+  - Allways assist me writting code. Specifie the path and the name of the file we need to apply the changes. 
+
 # Communication Protocols
 - Use gRPC for internal service-to-service communication:
 - Define .proto files in /api/proto/
 - Compile with protoc and share generated interfaces via Go modules
 - Use REST API (via HTTP) for public-facing gateway services
+
 
 # Event-Driven Architecture
 

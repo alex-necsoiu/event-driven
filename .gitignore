@@ -1,0 +1,49 @@
+# Binaries and build output
+/bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go build cache and mod cache
+/pkg/
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.DS_Store
+
+# Logs
+*.log
+
+# Env files
+.env
+.env.*
+
+# Docker
+*.pid
+*.sock
+
+# Protobuf generated files (keep if you want to version them, otherwise ignore)
+# Uncomment the next line to ignore generated code (if you always generate on build)
+# api/proto/gen/
+
+# Dependency directories
+vendor/
+
+# Test output
+/test/results/
+
+# Coverage
+coverage.out
+
+# Node/npm (if any frontend)
+node_modules/
+
+# Misc
+*.local 

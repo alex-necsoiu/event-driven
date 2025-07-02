@@ -1,0 +1,12 @@
+syntax = "proto3";
+package proto;
+
+option go_package = "github.com/alex-necsoiu/event-driven/api/proto/gen;gen";
+
+// Standard event envelope for event-driven messaging
+message Event {
+  string event_type = 1;
+  string payload = 2; // JSON-encoded payload
+  string timestamp = 3;
+  // Add more metadata fields as needed
+} 
