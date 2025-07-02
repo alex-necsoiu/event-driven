@@ -251,7 +251,7 @@ const file_user_proto_rawDesc = "" +
 	"\vUserService\x12;\n" +
 	"\n" +
 	"CreateUser\x12\x18.proto.CreateUserRequest\x1a\x13.proto.UserResponse\x125\n" +
-	"\aGetUser\x12\x15.proto.GetUserRequest\x1a\x13.proto.UserResponseB8Z6github.com/alex-necsoiu/event-driven/api/proto/gen;genb\x06proto3"
+	"\aGetUser\x12\x15.proto.GetUserRequest\x1a\x13.proto.UserResponseB4Z2github.com/alex-necsoiu/event-driven/api/proto/genb\x06proto3"
 
 var (
 	file_user_proto_rawDescOnce sync.Once

@@ -91,7 +91,7 @@ const file_event_proto_rawDesc = "" +
 	"\n" +
 	"event_type\x18\x01 \x01(\tR\teventType\x12\x18\n" +
 	"\apayload\x18\x02 \x01(\tR\apayload\x12\x1c\n" +
-	"\ttimestamp\x18\x03 \x01(\tR\ttimestampB8Z6github.com/alex-necsoiu/event-driven/api/proto/gen;genb\x06proto3"
+	"\ttimestamp\x18\x03 \x01(\tR\ttimestampB4Z2github.com/alex-necsoiu/event-driven/api/proto/genb\x06proto3"
 
 var (
 	file_event_proto_rawDescOnce sync.Once

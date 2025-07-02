@@ -249,7 +249,7 @@ const file_order_proto_rawDesc = "" +
 	"\x05error\x18\x02 \x01(\tR\x05error2\x88\x01\n" +
 	"\fOrderService\x12>\n" +
 	"\vCreateOrder\x12\x19.proto.CreateOrderRequest\x1a\x14.proto.OrderResponse\x128\n" +
-	"\bGetOrder\x12\x16.proto.GetOrderRequest\x1a\x14.proto.OrderResponseB8Z6github.com/alex-necsoiu/event-driven/api/proto/gen;genb\x06proto3"
+	"\bGetOrder\x12\x16.proto.GetOrderRequest\x1a\x14.proto.OrderResponseB4Z2github.com/alex-necsoiu/event-driven/api/proto/genb\x06proto3"
 
 var (
 	file_order_proto_rawDescOnce sync.Once
