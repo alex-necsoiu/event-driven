@@ -9,6 +9,7 @@ import (
 
 // OrderHandler implements the gRPC OrderServiceServer
 type OrderHandler struct {
+	gen.UnimplementedOrderServiceServer
 	cfg    Config
 	logger *log.Logger
 	// Add DB and event bus clients here
@@ -45,6 +46,3 @@ func (h *OrderHandler) GetOrder(ctx context.Context, req *gen.GetOrderRequest) (
 		Error: "",
 	}, nil
 }
-
-// mustEmbedUnimplementedOrderServiceServer implements the gRPC interface requirement
-func (h *OrderHandler) mustEmbedUnimplementedOrderServiceServer() {}

@@ -9,6 +9,7 @@ import (
 
 // UserHandler implements the gRPC UserServiceServer
 type UserHandler struct {
+	gen.UnimplementedUserServiceServer
 	cfg    Config
 	logger *log.Logger
 	// Add DB and event bus clients here
@@ -45,6 +46,3 @@ func (h *UserHandler) GetUser(ctx context.Context, req *gen.GetUserRequest) (*ge
 		Error: "",
 	}, nil
 }
-
-// mustEmbedUnimplementedUserServiceServer implements the gRPC interface requirement
-func (h *UserHandler) mustEmbedUnimplementedUserServiceServer() {}
