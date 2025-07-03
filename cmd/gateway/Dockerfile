@@ -10,7 +10,7 @@ WORKDIR /app
 RUN go mod init gateway-service
 
 # Add the required dependencies
-RUN go get github.com/alex-necsoiu/event-driven@v1.0.10
+RUN go get github.com/alex-necsoiu/event-driven@v1.0.12
 RUN go get github.com/joho/godotenv@v1.5.1
 RUN go get github.com/lib/pq@v1.10.9
 RUN go get github.com/nats-io/nats.go@v1.43.0
