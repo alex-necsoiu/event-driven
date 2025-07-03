@@ -45,3 +45,6 @@ func (h *UserHandler) GetUser(ctx context.Context, req *gen.GetUserRequest) (*ge
 		Error: "",
 	}, nil
 }
+
+// mustEmbedUnimplementedUserServiceServer implements the gRPC interface requirement
+func (h *UserHandler) mustEmbedUnimplementedUserServiceServer() {}

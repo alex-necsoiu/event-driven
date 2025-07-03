@@ -45,3 +45,6 @@ func (h *OrderHandler) GetOrder(ctx context.Context, req *gen.GetOrderRequest) (
 		Error: "",
 	}, nil
 }
+
+// mustEmbedUnimplementedOrderServiceServer implements the gRPC interface requirement
+func (h *OrderHandler) mustEmbedUnimplementedOrderServiceServer() {}
