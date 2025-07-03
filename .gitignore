@@ -9,7 +9,7 @@
 *.out
 
 # Go build cache and mod cache
-/pkg/
+# /pkg/  # Commented out to allow pkg/messaging/
 
 # IDE/editor files
 .vscode/
