@@ -10,7 +10,7 @@ WORKDIR /app
 RUN go mod init order-service
 
 # Add the required dependencies
-RUN go get github.com/alex-necsoiu/event-driven@v1.0.7
+RUN go get github.com/alex-necsoiu/event-driven@v1.0.8
 RUN go get github.com/joho/godotenv@v1.5.1
 RUN go get github.com/lib/pq@v1.10.9
 RUN go get github.com/nats-io/nats.go@v1.43.0
