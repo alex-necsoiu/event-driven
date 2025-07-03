@@ -52,4 +52,32 @@ func migrateUsers(db *sql.DB, logger *log.Logger) error {
 	return err
 }
 
-// Implement CreateUser and GetUser as needed...
+// CreateUser creates a new user and returns the user ID
+func (r *PostgresRepository) CreateUser(name, email string) (string, error) {
+	var id string
+	err := r.db.QueryRow(
+		"INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id::text",
+		name, email,
+	).Scan(&id)
+
+	if err != nil {
+		return "", err
+	}
+
+	return id, nil
+}
+
+// GetUser retrieves a user by ID
+func (r *PostgresRepository) GetUser(id string) (User, error) {
+	var user User
+	err := r.db.QueryRow(
+		"SELECT id::text, name, email FROM users WHERE id = $1",
+		id,
+	).Scan(&user.ID, &user.Name, &user.Email)
+
+	if err != nil {
+		return User{}, err
+	}
+
+	return user, nil
+}

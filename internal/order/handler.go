@@ -10,22 +10,30 @@ import (
 // OrderHandler implements the gRPC OrderServiceServer
 type OrderHandler struct {
 	gen.UnimplementedOrderServiceServer
-	cfg    Config
-	logger *log.Logger
-	// Add DB and event bus clients here
+	service *Service
+	logger  *log.Logger
 }
 
-func NewOrderHandler(cfg Config, logger *log.Logger) *OrderHandler {
-	return &OrderHandler{cfg: cfg, logger: logger}
+func NewOrderHandler(service *Service, logger *log.Logger) *OrderHandler {
+	return &OrderHandler{service: service, logger: logger}
 }
 
-// CreateOrder handles order creation and publishes an event (placeholder)
+// CreateOrder handles order creation and publishes an event
 func (h *OrderHandler) CreateOrder(ctx context.Context, req *gen.CreateOrderRequest) (*gen.OrderResponse, error) {
-	h.logger.Println("CreateOrder called (placeholder)")
-	// TODO: Insert order into DB, publish OrderCreated event
+	h.logger.Printf("CreateOrder called for user: %s, amount: %.2f", req.UserId, req.Amount)
+
+	orderID, err := h.service.CreateOrder(req.UserId, req.Amount)
+	if err != nil {
+		h.logger.Printf("Failed to create order: %v", err)
+		return &gen.OrderResponse{
+			Order: nil,
+			Error: err.Error(),
+		}, nil
+	}
+
 	return &gen.OrderResponse{
 		Order: &gen.Order{
-			Id:     "1",
+			Id:     orderID,
 			UserId: req.UserId,
 			Amount: req.Amount,
 		},
@@ -33,15 +41,24 @@ func (h *OrderHandler) CreateOrder(ctx context.Context, req *gen.CreateOrderRequ
 	}, nil
 }
 
-// GetOrder handles fetching an order (placeholder)
+// GetOrder handles fetching an order
 func (h *OrderHandler) GetOrder(ctx context.Context, req *gen.GetOrderRequest) (*gen.OrderResponse, error) {
-	h.logger.Println("GetOrder called (placeholder)")
-	// TODO: Fetch order from DB
+	h.logger.Printf("GetOrder called for ID: %s", req.Id)
+
+	order, err := h.service.GetOrder(req.Id)
+	if err != nil {
+		h.logger.Printf("Failed to get order: %v", err)
+		return &gen.OrderResponse{
+			Order: nil,
+			Error: err.Error(),
+		}, nil
+	}
+
 	return &gen.OrderResponse{
 		Order: &gen.Order{
-			Id:     req.Id,
-			UserId: "1",
-			Amount: 99.99,
+			Id:     order.ID,
+			UserId: order.UserID,
+			Amount: order.Amount,
 		},
 		Error: "",
 	}, nil

@@ -10,22 +10,30 @@ import (
 // UserHandler implements the gRPC UserServiceServer
 type UserHandler struct {
 	gen.UnimplementedUserServiceServer
-	cfg    Config
-	logger *log.Logger
-	// Add DB and event bus clients here
+	service *Service
+	logger  *log.Logger
 }
 
-func NewUserHandler(cfg Config, logger *log.Logger) *UserHandler {
-	return &UserHandler{cfg: cfg, logger: logger}
+func NewUserHandler(service *Service, logger *log.Logger) *UserHandler {
+	return &UserHandler{service: service, logger: logger}
 }
 
-// CreateUser handles user creation and publishes an event (placeholder)
+// CreateUser handles user creation and publishes an event
 func (h *UserHandler) CreateUser(ctx context.Context, req *gen.CreateUserRequest) (*gen.UserResponse, error) {
-	h.logger.Println("CreateUser called (placeholder)")
-	// TODO: Insert user into DB, publish UserCreated event
+	h.logger.Printf("CreateUser called for: %s (%s)", req.Name, req.Email)
+
+	userID, err := h.service.CreateUser(req.Name, req.Email)
+	if err != nil {
+		h.logger.Printf("Failed to create user: %v", err)
+		return &gen.UserResponse{
+			User:  nil,
+			Error: err.Error(),
+		}, nil
+	}
+
 	return &gen.UserResponse{
 		User: &gen.User{
-			Id:    "1",
+			Id:    userID,
 			Name:  req.Name,
 			Email: req.Email,
 		},
@@ -33,15 +41,24 @@ func (h *UserHandler) CreateUser(ctx context.Context, req *gen.CreateUserRequest
 	}, nil
 }
 
-// GetUser handles fetching a user (placeholder)
+// GetUser handles fetching a user
 func (h *UserHandler) GetUser(ctx context.Context, req *gen.GetUserRequest) (*gen.UserResponse, error) {
-	h.logger.Println("GetUser called (placeholder)")
-	// TODO: Fetch user from DB
+	h.logger.Printf("GetUser called for ID: %s", req.Id)
+
+	user, err := h.service.GetUser(req.Id)
+	if err != nil {
+		h.logger.Printf("Failed to get user: %v", err)
+		return &gen.UserResponse{
+			User:  nil,
+			Error: err.Error(),
+		}, nil
+	}
+
 	return &gen.UserResponse{
 		User: &gen.User{
-			Id:    req.Id,
-			Name:  "John Doe",
-			Email: "john@example.com",
+			Id:    user.ID,
+			Name:  user.Name,
+			Email: user.Email,
 		},
 		Error: "",
 	}, nil

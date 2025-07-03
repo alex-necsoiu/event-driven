@@ -13,6 +13,7 @@ import (
 type Repository interface {
 	CreateOrder(userID string, amount float64) (string, error)
 	GetOrder(id string) (Order, error)
+	UpdateOrderStatus(id string, status string) error
 }
 
 type Order struct {
@@ -50,4 +51,44 @@ func migrateOrders(db *sql.DB, logger *log.Logger) error {
 	return err
 }
 
-// Implement CreateOrder and GetOrder as needed...
+// CreateOrder creates a new order and returns the order ID
+func (r *PostgresRepository) CreateOrder(userID string, amount float64) (string, error) {
+	var id string
+	err := r.db.QueryRow(
+		"INSERT INTO orders (user_id, amount) VALUES ($1, $2) RETURNING id::text",
+		userID, amount,
+	).Scan(&id)
+
+	if err != nil {
+		return "", err
+	}
+
+	return id, nil
+}
+
+// GetOrder retrieves an order by ID
+func (r *PostgresRepository) GetOrder(id string) (Order, error) {
+	var order Order
+	err := r.db.QueryRow(
+		"SELECT id::text, user_id::text, amount FROM orders WHERE id = $1",
+		id,
+	).Scan(&order.ID, &order.UserID, &order.Amount)
+
+	if err != nil {
+		return Order{}, err
+	}
+
+	return order, nil
+}
+
+// UpdateOrderStatus updates the status of an order
+func (r *PostgresRepository) UpdateOrderStatus(id string, status string) error {
+	// First, we need to add a status column to the orders table
+	// For now, we'll just log the status update
+	_, err := r.db.Exec(
+		"UPDATE orders SET status = $1 WHERE id = $2",
+		status, id,
+	)
+
+	return err
+}

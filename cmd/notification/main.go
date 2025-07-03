@@ -5,9 +5,9 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/alex-necsoiu/event-driven/internal/notification"
+	"github.com/alex-necsoiu/event-driven/pkg/messaging"
 
 	"github.com/joho/godotenv"
 )
@@ -15,18 +15,31 @@ import (
 func main() {
 	_ = godotenv.Load(".env")
 	logger := log.New(os.Stdout, "[notification] ", log.LstdFlags)
-	cfg := notification.LoadConfig()
 
-	// Start event consumer (placeholder)
-	go notification.StartEventConsumer(cfg, logger)
+	// Initialize messaging subscriber
+	subscriber, err := messaging.NewSubscriber(os.Getenv("NATS_URL"))
+	if err != nil {
+		logger.Fatal("failed to create subscriber:", err)
+	}
+	defer subscriber.Close()
 
-	logger.Println("Notification service started. Waiting for events...")
+	// Initialize service
+	service := notification.NewService(subscriber, logger)
 
-	// Wait for interrupt signal to gracefully shutdown
-	sigCh := make(chan os.Signal, 1)
-	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
-	<-sigCh
+	// Start the service
+	if err := service.Start(); err != nil {
+		logger.Fatal("failed to start service:", err)
+	}
+
+	logger.Println("Notification service started and listening for events")
+
+	// Wait for interrupt signal
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+	<-sigChan
+
 	logger.Println("Shutting down notification service...")
-	// Add cleanup logic if needed
-	time.Sleep(1 * time.Second)
+	if err := service.Stop(); err != nil {
+		logger.Printf("Error stopping service: %v", err)
+	}
 }
