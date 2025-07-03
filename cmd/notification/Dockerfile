@@ -17,6 +17,9 @@ RUN go get github.com/nats-io/nats.go@v1.43.0
 RUN go get google.golang.org/grpc@v1.73.0
 RUN go get google.golang.org/protobuf@v1.36.6
 
+# Copy config files
+COPY configs/notification.env.example /app/configs/notification.env.example
+
 # Build the service
 RUN go build -o /notification github.com/alex-necsoiu/event-driven/cmd/notification
 
@@ -26,7 +29,7 @@ WORKDIR /root/
 # Copy the binary
 COPY --from=builder /notification .
 
-# Copy environment file
-COPY configs/notification.env.example .env
+# Copy environment file from the builder stage
+COPY --from=builder /app/configs/notification.env.example .env
 
 CMD ["./notification"] 

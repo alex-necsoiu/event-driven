@@ -17,6 +17,9 @@ RUN go get github.com/nats-io/nats.go@v1.43.0
 RUN go get google.golang.org/grpc@v1.73.0
 RUN go get google.golang.org/protobuf@v1.36.6
 
+# Copy config files
+COPY configs/gateway.env.example /app/configs/gateway.env.example
+
 # Build the service
 RUN go build -o /gateway github.com/alex-necsoiu/event-driven/cmd/gateway
 
@@ -26,8 +29,8 @@ WORKDIR /root/
 # Copy the binary
 COPY --from=builder /gateway .
 
-# Copy environment file
-COPY configs/gateway.env.example .env
+# Copy environment file from the builder stage
+COPY --from=builder /app/configs/gateway.env.example .env
 
 EXPOSE 8080
 CMD ["./gateway"] 

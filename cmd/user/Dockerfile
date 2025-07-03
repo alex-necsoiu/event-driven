@@ -17,6 +17,9 @@ RUN go get github.com/nats-io/nats.go@v1.43.0
 RUN go get google.golang.org/grpc@v1.73.0
 RUN go get google.golang.org/protobuf@v1.36.6
 
+# Copy config files
+COPY configs/user.env.example /app/configs/user.env.example
+
 # Build the service
 RUN go build -o /user github.com/alex-necsoiu/event-driven/cmd/user
 
@@ -26,8 +29,8 @@ WORKDIR /root/
 # Copy the binary
 COPY --from=builder /user .
 
-# Copy environment file
-COPY configs/user.env.example .env
+# Copy environment file from the builder stage
+COPY --from=builder /app/configs/user.env.example .env
 
 EXPOSE 50051
 CMD ["./user"] 
