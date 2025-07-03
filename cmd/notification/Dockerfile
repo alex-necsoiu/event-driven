@@ -1,17 +1,32 @@
 # Start from the official Golang image
 FROM golang:1.23.3-alpine as builder
+
+# Install git for fetching from GitHub
+RUN apk add --no-cache git
+
 WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download
-COPY api/proto/gen api/proto/gen
-COPY cmd/notification cmd/notification
-COPY internal/notification internal/notification
-COPY configs/notification.env.example configs/notification.env.example
-RUN go build -o /notification ./cmd/notification
+
+# Create go.mod for the service
+RUN go mod init notification-service
+
+# Add the required dependencies
+RUN go get github.com/alex-necsoiu/event-driven@v1.0.2
+RUN go get github.com/joho/godotenv@v1.5.1
+RUN go get github.com/lib/pq@v1.10.9
+RUN go get github.com/nats-io/nats.go@v1.43.0
+RUN go get google.golang.org/grpc@v1.73.0
+RUN go get google.golang.org/protobuf@v1.36.6
+
+# Build the service
+RUN go build -o /notification github.com/alex-necsoiu/event-driven/cmd/notification
 
 FROM alpine:latest
 WORKDIR /root/
+
+# Copy the binary
 COPY --from=builder /notification .
-COPY --from=builder /app/configs/notification.env.example .env
-CMD ["./notification"]
-RUN go install github.com/alex-necsoiu/event-driven/cmd/order@v1.0.0 
+
+# Copy environment file
+COPY configs/notification.env.example .env
+
+CMD ["./notification"] 

@@ -1,20 +1,33 @@
 # Start from the official Golang image
 FROM golang:1.23.3-alpine as builder
+
+# Install git for fetching from GitHub
+RUN apk add --no-cache git
+
 WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download
 
-# Copy the entire module (from module root)
-COPY . .
+# Create go.mod for the service
+RUN go mod init order-service
 
-# Build the specific service
-RUN go build -o /order ./cmd/order
+# Add the required dependencies
+RUN go get github.com/alex-necsoiu/event-driven@v1.0.2
+RUN go get github.com/joho/godotenv@v1.5.1
+RUN go get github.com/lib/pq@v1.10.9
+RUN go get github.com/nats-io/nats.go@v1.43.0
+RUN go get google.golang.org/grpc@v1.73.0
+RUN go get google.golang.org/protobuf@v1.36.6
+
+# Build the service
+RUN go build -o /order github.com/alex-necsoiu/event-driven/cmd/order
 
 FROM alpine:latest
 WORKDIR /root/
-COPY --from=builder /order .
-COPY --from=builder /app/configs/order.env.example .env
-EXPOSE 50052
-CMD ["./order"] 
 
-RUN go install github.com/alex-necsoiu/event-driven/cmd/order@v1.0.0    
+# Copy the binary
+COPY --from=builder /order .
+
+# Copy environment file (you'll need to provide this or create it)
+COPY configs/order.env.example .env
+
+EXPOSE 50052
+CMD ["./order"]    
