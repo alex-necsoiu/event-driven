@@ -1,7 +1,7 @@
 syntax = "proto3";
 package proto;
 
-option go_package = "github.com/alex-necsoiu/event-driven/api/proto/gen;gen";
+option go_package = "github.com/alex-necsoiu/event-driven/api/proto/gen";
 
 // Standard event envelope for event-driven messaging
 message Event {

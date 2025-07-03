@@ -10,7 +10,6 @@ require (
 	github.com/nats-io/nats.go v1.43.0
 	google.golang.org/grpc v1.73.0
 	google.golang.org/protobuf v1.36.6
-	github.com/alex-necsoiu/event-driven v1.0.1
 )
 
 require (
